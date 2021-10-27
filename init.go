@@ -44,7 +44,7 @@ func init() {
 		official = ""
 		for _, line := range lines {
 			if !strings.Contains(line, "佣金") {
-				official += line
+				official += line + "\n"
 			}
 		}
 		official = strings.Trim(official, "\n")
