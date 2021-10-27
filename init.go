@@ -29,6 +29,7 @@ func init() {
 			c.String(404, err.Error())
 			return
 		}
+		short, _ := jsonparser.GetInt(data, "content")
 		code, _ := jsonparser.GetInt(data, "code")
 		if code != 0 {
 			msg, _ := jsonparser.GetString(data, "msg")
@@ -43,7 +44,7 @@ func init() {
 		lines := strings.Split(official, "\n")
 		official = ""
 		for _, line := range lines {
-			if strings.Contains(line, "抢购") {
+			if !strings.Contains(line, "佣金") {
 				official += line + "\n"
 			}
 		}
@@ -54,6 +55,7 @@ func init() {
 			price = res[1]
 		}
 		c.JSON(200, map[string]interface{}{
+			"short":    short,
 			"official": official,
 			"price":    price,
 			"image":    image,
