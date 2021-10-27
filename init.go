@@ -43,7 +43,7 @@ func init() {
 		lines := strings.Split(official, "\n")
 		official = ""
 		for _, line := range lines {
-			if !strings.Contains(line, "佣金") {
+			if strings.Contains(line, "抢购") {
 				official += line + "\n"
 			}
 		}
