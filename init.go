@@ -3,6 +3,7 @@ package jdprice
 import (
 	"fmt"
 	"regexp"
+	"strings"
 
 	"github.com/beego/beego/v2/adapter/httplib"
 	"github.com/buger/jsonparser"
@@ -39,6 +40,14 @@ func init() {
 			c.String(404, "暂无商品信息。")
 			return
 		}
+		lines := strings.Split(official, "\n")
+		official = ""
+		for _, line := range lines {
+			if !strings.Contains(line, "佣金") {
+				official += line
+			}
+		}
+		official = strings.Trim(official, "\n")
 		image, _ := jsonparser.GetString(data, "images", "[0]")
 		var price string = ""
 		if res := regexp.MustCompile(`京东价：(.*)\n`).FindStringSubmatch(official); len(res) > 0 {
