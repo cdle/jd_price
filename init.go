@@ -29,7 +29,7 @@ func init() {
 			c.String(404, err.Error())
 			return
 		}
-		short, _ := jsonparser.GetInt(data, "content")
+		short, _ := jsonparser.GetString(data, "content")
 		code, _ := jsonparser.GetInt(data, "code")
 		if code != 0 {
 			msg, _ := jsonparser.GetString(data, "msg")
