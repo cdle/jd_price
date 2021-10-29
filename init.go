@@ -19,7 +19,7 @@ func init() {
 		if sku == 0 {
 			return ""
 		}
-		req := httplib.Get("https://api.jingpinku.com/get_powerful_coup_link/api?" +
+		req := httplib.Get("https://api.jingpinku.com/get_rebate_link/api?" +
 			"appid=" + otto.Get("jingpinku_appid") +
 			"&appkey=" + otto.Get("jingpinku_appkey") +
 			"&union_id=" + otto.Get("jd_union_id") +
