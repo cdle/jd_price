@@ -17,7 +17,7 @@ func init() {
 	core.OttoFuncs["jdprice"] = func(str string) string {
 		sku := core.Int(str)
 		if sku == 0 {
-			return ""
+			return `{}`
 		}
 		req := httplib.Get("https://api.jingpinku.com/get_rebate_link/api?" +
 			"appid=" + otto.Get("jingpinku_appid") +
@@ -26,17 +26,17 @@ func init() {
 			"&content=" + fmt.Sprintf("https://item.jd.com/%d.html", sku))
 		data, err := req.Bytes()
 		if err != nil {
-			return err.Error()
+			return `{}`
 		}
 		short, _ := jsonparser.GetString(data, "content")
 		code, _ := jsonparser.GetInt(data, "code")
 		if code != 0 {
 			msg, _ := jsonparser.GetString(data, "msg")
-			return msg
+			return `{}`
 		}
 		official, _ := jsonparser.GetString(data, "official")
 		if official == "" {
-			return "暂无商品信息。"
+			return `{}`
 		}
 		lines := strings.Split(official, "\n")
 		official = ""
