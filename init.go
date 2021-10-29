@@ -71,6 +71,7 @@ func init() {
 	}
 	core.Server.GET("/jdprice/:sku", func(c *gin.Context) {
 		sku := c.Param("sku")
-		core.OttoFuncs["jdprice"](sku)
+
+		c.String(200, core.OttoFuncs["jdprice"](sku))
 	})
 }
