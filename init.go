@@ -43,7 +43,7 @@ func init() {
 		title := ""
 		for i, line := range lines {
 			if i == 0 {
-				title = strings.Trim(regexp.MustCompile("`【.*?】`").ReplaceAllString(line, ""), " ")
+				title = strings.Trim(regexp.MustCompile("【.*?】").ReplaceAllString(line, ""), " ")
 			}
 			if !strings.Contains(line, "佣金") {
 				official += line + "\n"
