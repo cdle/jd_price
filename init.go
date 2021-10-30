@@ -98,30 +98,29 @@ func init() {
 			Rules:   []string{`raw https://u\.jd\.com/(\w+)`},
 			FindAll: true,
 			Handle: func(s core.Sender) interface{} {
-				// spy := otto.Get("jd_spy_on")
-				// if spy != "" {
-				// 	ms := []Message{}
-				// 	json.Unmarshal([]byte(spy), &ms)
-				// 	for _, m := range ms {
-				// 		if m.ImType == s.GetImType() && fmt.Sprint(m.GroupCode) == fmt.Sprint(s.GetChatID()) {
-				// 			s.Continue()
-				// 			return nil
-				// 		}
-				// 	}
-				// }
-				// for _, v := range s.GetAllMatch() {
-				// 	data, _ := httplib.Get("https://u.jd.com/" + v[0]).String()
-				// 	if data != "" {
-				// 		url := regexp.MustCompile(`hrl='([^']+)'`).FindStringSubmatch(data)[1]
-				// 		data, _ = httplib.Get(url).String()
-				// 		if data != "" {
-				// 			s := s.Copy(s)
-				// 			s.SetContent(data)
-				// 			core.Senders <- s
-				// 		}
-				// 	}
-				// }
-				s.Continue()
+				spy := otto.Get("jd_spy_on")
+				if spy != "" {
+					ms := []Message{}
+					json.Unmarshal([]byte(spy), &ms)
+					for _, m := range ms {
+						if m.ImType == s.GetImType() && fmt.Sprint(m.GroupCode) == fmt.Sprint(s.GetChatID()) {
+							s.Continue()
+							return nil
+						}
+					}
+				}
+				for _, v := range s.GetAllMatch() {
+					data, _ := httplib.Get("https://u.jd.com/" + v[0]).String()
+					if data != "" {
+						url := regexp.MustCompile(`hrl='([^']+)'`).FindStringSubmatch(data)[1]
+						data, _ = httplib.Get(url).String()
+						if data != "" {
+							s := s.Copy(s)
+							s.SetContent(data)
+							core.Senders <- s
+						}
+					}
+				}
 				return nil
 			},
 		},
