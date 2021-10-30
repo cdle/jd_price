@@ -94,19 +94,20 @@ func init() {
 			Rules:   []string{`([\s\S]*https://u\.jd\.com/(\w+)[\s\S]*)`},
 			FindAll: true,
 			Handle: func(s core.Sender) interface{} {
-				for _, v := range s.GetAllMatch() {
-					data, _ := httplib.Get("https://u.jd.com/" + v[0]).String()
-					if data != "" {
-						url := regexp.MustCompile(`hrl='([^']+)'`).FindStringSubmatch(data)[1]
-						data, _ = httplib.Get(url).String()
-						if data != "" {
-							s := s.Copy(s)
-							s.SetContent(data)
-							core.Senders <- s
-						}
-					}
-				}
 				return nil
+				// for _, v := range s.GetAllMatch() {
+				// 	data, _ := httplib.Get("https://u.jd.com/" + v[0]).String()
+				// 	if data != "" {
+				// 		url := regexp.MustCompile(`hrl='([^']+)'`).FindStringSubmatch(data)[1]
+				// 		data, _ = httplib.Get(url).String()
+				// 		if data != "" {
+				// 			s := s.Copy(s)
+				// 			s.SetContent(data)
+				// 			core.Senders <- s
+				// 		}
+				// 	}
+				// }
+				// return nil
 			},
 		},
 	})
