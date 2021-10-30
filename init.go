@@ -95,7 +95,7 @@ func init() {
 	}
 	core.AddCommand("", []core.Function{
 		{
-			Rules:   []string{`([\s\S]*https://u\.jd\.com/(\w+)[\s\S]*)`},
+			Rules:   []string{`[\s\S]*https://u\.jd\.com/(\w+)[\s\S]*`},
 			FindAll: true,
 			Handle: func(s core.Sender) interface{} {
 				spy := otto.Get("jd_spy_on")
