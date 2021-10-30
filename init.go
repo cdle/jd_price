@@ -89,25 +89,39 @@ func init() {
 
 		c.String(200, core.OttoFuncs["jdprice"](sku))
 	})
+	type Message struct {
+		ImType    string      `json:"imType"`
+		GroupCode interface{} `json:"groupCode"`
+	}
 	core.AddCommand("", []core.Function{
 		{
 			Rules:   []string{`([\s\S]*https://u\.jd\.com/(\w+)[\s\S]*)`},
 			FindAll: true,
 			Handle: func(s core.Sender) interface{} {
+				spy := otto.Get("jd_spy_on")
+				if spy != "" {
+					ms := []Message{}
+					json.Unmarshal([]byte(spy), &ms)
+					for _, m := range ms {
+						if m.ImType == s.GetImType() && fmt.Sprint(m.GroupCode) == fmt.Sprint(s.GetChatID()) {
+							s.Continue()
+							return nil
+						}
+					}
+				}
+				for _, v := range s.GetAllMatch() {
+					data, _ := httplib.Get("https://u.jd.com/" + v[0]).String()
+					if data != "" {
+						url := regexp.MustCompile(`hrl='([^']+)'`).FindStringSubmatch(data)[1]
+						data, _ = httplib.Get(url).String()
+						if data != "" {
+							s := s.Copy(s)
+							s.SetContent(data)
+							core.Senders <- s
+						}
+					}
+				}
 				return nil
-				// for _, v := range s.GetAllMatch() {
-				// 	data, _ := httplib.Get("https://u.jd.com/" + v[0]).String()
-				// 	if data != "" {
-				// 		url := regexp.MustCompile(`hrl='([^']+)'`).FindStringSubmatch(data)[1]
-				// 		data, _ = httplib.Get(url).String()
-				// 		if data != "" {
-				// 			s := s.Copy(s)
-				// 			s.SetContent(data)
-				// 			core.Senders <- s
-				// 		}
-				// 	}
-				// }
-				// return nil
 			},
 		},
 	})
