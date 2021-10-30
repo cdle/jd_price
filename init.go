@@ -3,6 +3,7 @@ package jdprice
 import (
 	"encoding/json"
 	"fmt"
+	"math"
 	"regexp"
 	"strings"
 
@@ -58,6 +59,20 @@ func init() {
 		}
 		if res := regexp.MustCompile(`促销价：(.*)\n`).FindStringSubmatch(official); len(res) > 0 {
 			final = res[1]
+		}
+		if math.Abs(core.Float64(price)-core.Float64(final)) < 0.1 {
+			final = price
+		} else {
+			req := httplib.Get("https://api.jingpinku.com/get_rebate_link/api?" +
+				"appid=" + otto.Get("jingpinku_appid") +
+				"&appkey=" + otto.Get("jingpinku_appkey") +
+				"&union_id=" + otto.Get("jd_union_id") +
+				"&content=" + fmt.Sprintf("https://item.jd.com/%d.html", sku))
+			data, _ := req.Bytes()
+			quan, _ := jsonparser.GetString(data, "content")
+			if strings.Contains(quan, "https://u.jd.com") {
+				short = quan
+			}
 		}
 		data, _ = json.Marshal(map[string]interface{}{
 			"title":    title,
