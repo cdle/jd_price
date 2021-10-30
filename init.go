@@ -115,7 +115,7 @@ func init() {
 						url := regexp.MustCompile(`hrl='([^']+)'`).FindStringSubmatch(data)[1]
 						data, _ = httplib.Get(url).String()
 						if data != "" {
-							s := s.Copy(s)
+							s := s.Copy()
 							s.SetContent(data)
 							core.Senders <- s
 						}
