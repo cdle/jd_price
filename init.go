@@ -99,15 +99,9 @@ func init() {
 			FindAll: true,
 			Handle: func(s core.Sender) interface{} {
 				spy := otto.Get("jd_spy_on")
-				if spy != "" {
-					ms := []Message{}
-					json.Unmarshal([]byte(spy), &ms)
-					for _, m := range ms {
-						if m.ImType == s.GetImType() && fmt.Sprint(m.GroupCode) == fmt.Sprint(s.GetChatID()) {
-							s.Continue()
-							return nil
-						}
-					}
+				if spy != "" && strings.Contains(spy, fmt.Sprint(s.GetChatID())) {
+					s.Continue()
+					return nil
 				}
 				for _, v := range s.GetAllMatch() {
 					data, _ := httplib.Get("https://u.jd.com/" + v[0]).String()
