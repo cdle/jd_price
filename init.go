@@ -63,7 +63,7 @@ func init() {
 		if math.Abs(core.Float64(price)-core.Float64(final)) < 0.1 {
 			final = price
 		} else {
-			req := httplib.Get("https://api.jingpinku.com/get_rebate_link/api?" +
+			req := httplib.Get("https://api.jingpinku.com/get_powerful_coup_link/api?" +
 				"appid=" + otto.Get("jingpinku_appid") +
 				"&appkey=" + otto.Get("jingpinku_appkey") +
 				"&union_id=" + otto.Get("jd_union_id") +
