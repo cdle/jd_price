@@ -7,6 +7,8 @@ import (
 	"regexp"
 	"strings"
 
+	u "net/url"
+
 	"github.com/beego/beego/v2/adapter/httplib"
 	"github.com/buger/jsonparser"
 	"github.com/cdle/sillyGirl/core"
@@ -110,6 +112,7 @@ func init() {
 						data, _ = httplib.Get(url).String()
 						if data != "" {
 							s := s.Copy()
+							data, _ = u.QueryUnescape(data)
 							s.SetContent(data)
 							core.Senders <- s
 						}
