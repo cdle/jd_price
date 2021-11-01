@@ -113,9 +113,9 @@ func init() {
 						if data != "" {
 							s := s.Copy()
 							data, _ = u.QueryUnescape(data)
-							data = regexp.MustCompile(`http://item\.jd\.com/\d+\.html`).FindString(data)
-							if data != "" {
-								s.SetContent(data)
+							res := regexp.MustCompile(`(http://item\.jd\.com/\d+\.html)`).FindStringSubmatch(data)
+							if len(res) > 1 {
+								s.SetContent(res[1])
 								core.Senders <- s
 							}
 						}
