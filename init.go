@@ -113,8 +113,11 @@ func init() {
 						if data != "" {
 							s := s.Copy()
 							data, _ = u.QueryUnescape(data)
-							s.SetContent(data)
-							core.Senders <- s
+							data = regexp.MustCompile(`http://item\.jd\.com/\d+\.html`).FindString(data)
+							if data != "" {
+								s.SetContent(data)
+								core.Senders <- s
+							}
 						}
 					}
 				}
