@@ -6,9 +6,6 @@ import (
 	"math"
 	"regexp"
 	"strings"
-	"time"
-
-	u "net/url"
 
 	"github.com/beego/beego/v2/adapter/httplib"
 	"github.com/buger/jsonparser"
@@ -96,38 +93,38 @@ func init() {
 		ImType    string      `json:"imType"`
 		GroupCode interface{} `json:"groupCode"`
 	}
-	go func() {
-		time.Sleep(time.Second * 5)
-		core.AddCommand("", []core.Function{
-			{
-				Rules:   []string{`raw https://u\.jd\.com/(\w+)`},
-				FindAll: true,
-				Handle: func(s core.Sender) interface{} {
-					spy := otto.Get("jd_spy_on")
-					if spy != "" && strings.Contains(spy, fmt.Sprint(s.GetChatID())) {
-						s.Continue()
-						return nil
-					}
-					for _, v := range s.GetAllMatch() {
-						data, _ := httplib.Get("https://u.jd.com/" + v[0]).String()
-						if data != "" {
-							url := regexp.MustCompile(`hrl='([^']+)'`).FindStringSubmatch(data)[1]
-							data, _ = httplib.Get(url).String()
-							if data != "" {
-								s := s.Copy()
-								data, _ = u.QueryUnescape(data)
-								res := regexp.MustCompile(`(http://item\.jd\.com/\d+\.html)`).FindStringSubmatch(data)
-								if len(res) > 1 {
-									s.SetContent(res[1])
-									core.Senders <- s
-								}
-							}
-						}
-					}
-					return nil
-				},
-			},
-		})
-	}()
+	// go func() {
+	// 	time.Sleep(time.Second * 5)
+	// 	core.AddCommand("", []core.Function{
+	// 		{
+	// 			Rules:   []string{`raw https://u\.jd\.com/(\w+)`},
+	// 			FindAll: true,
+	// 			Handle: func(s core.Sender) interface{} {
+	// 				spy := otto.Get("jd_spy_on")
+	// 				if spy != "" && strings.Contains(spy, fmt.Sprint(s.GetChatID())) {
+	// 					s.Continue()
+	// 					return nil
+	// 				}
+	// 				for _, v := range s.GetAllMatch() {
+	// 					data, _ := httplib.Get("https://u.jd.com/" + v[0]).String()
+	// 					if data != "" {
+	// 						url := regexp.MustCompile(`hrl='([^']+)'`).FindStringSubmatch(data)[1]
+	// 						data, _ = httplib.Get(url).String()
+	// 						if data != "" {
+	// 							s := s.Copy()
+	// 							data, _ = u.QueryUnescape(data)
+	// 							res := regexp.MustCompile(`(http://item\.jd\.com/\d+\.html)`).FindStringSubmatch(data)
+	// 							if len(res) > 1 {
+	// 								s.SetContent(res[1])
+	// 								core.Senders <- s
+	// 							}
+	// 						}
+	// 					}
+	// 				}
+	// 				return nil
+	// 			},
+	// 		},
+	// 	})
+	// }()
 
 }
