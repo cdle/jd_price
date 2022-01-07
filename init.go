@@ -87,7 +87,7 @@ func init() {
 	core.Server.GET("/jdprice/:sku", func(c *gin.Context) {
 		sku := c.Param("sku")
 
-		c.String(200, core.OttoFuncs["jdprice"](sku))
+		c.String(200, core.OttoFuncs["jdprice"].(func(string) string)(sku))
 	})
 	type Message struct {
 		ImType    string      `json:"imType"`
