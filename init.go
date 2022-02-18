@@ -21,9 +21,9 @@ func init() {
 			return `{}`
 		}
 		req := httplib.Get("https://api.jingpinku.com/get_rebate_link/api?" +
-			"appid=" + otto.Get("jingpinku_appid") +
-			"&appkey=" + otto.Get("jingpinku_appkey") +
-			"&union_id=" + otto.Get("jd_union_id") +
+			"appid=" + otto.GetString("jingpinku_appid") +
+			"&appkey=" + otto.GetString("jingpinku_appkey") +
+			"&union_id=" + otto.GetString("jd_union_id") +
 			"&content=" + fmt.Sprintf("https://item.jd.com/%d.html", sku))
 		data, err := req.Bytes()
 		if err != nil {
@@ -64,9 +64,9 @@ func init() {
 			final = price
 		} else {
 			req := httplib.Get("https://api.jingpinku.com/get_powerful_coup_link/api?" +
-				"appid=" + otto.Get("jingpinku_appid") +
-				"&appkey=" + otto.Get("jingpinku_appkey") +
-				"&union_id=" + otto.Get("jd_union_id") +
+				"appid=" + otto.GetString("jingpinku_appid") +
+				"&appkey=" + otto.GetString("jingpinku_appkey") +
+				"&union_id=" + otto.GetString("jd_union_id") +
 				"&content=" + fmt.Sprintf("https://item.jd.com/%d.html", sku))
 			data, _ := req.Bytes()
 			quan, _ := jsonparser.GetString(data, "content")
